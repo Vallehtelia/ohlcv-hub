@@ -81,8 +81,9 @@ ohlcv-hub fetch --symbols SPY --start 2024-01-01 --end 2024-01-10 --tf 1d --out 
 pip install -e ".[dev]"
 pytest -q
 bandit -r ohlcv_hub -x tests -q
-pip-audit
 ```
+
+For dependency auditing (Python 3.10+): `pip install -e ".[audit]"` then `pip-audit`.
 
 Internal release and security notes live under `docs/internal/`.
 

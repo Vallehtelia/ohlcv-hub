@@ -26,12 +26,17 @@ jobs:
         run: |
           python -m pip install -U pip
           pip install -e ".[dev]"
+          python -m pip check
 
       - name: Run tests
         run: pytest -q
 
       - name: Run bandit
         run: bandit -r ohlcv_hub -x tests -q
+
+      - name: Install audit dependencies
+        if: matrix.python-version != '3.9'
+        run: pip install -e ".[audit]"
 
       - name: Run pip-audit
         if: matrix.python-version != '3.9'
