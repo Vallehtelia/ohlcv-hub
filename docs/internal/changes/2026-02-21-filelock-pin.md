@@ -8,7 +8,7 @@
 
 ## Why
 
-CI was failing on pip-audit because of a vulnerable transitive filelock (3.19.1). pip-audit’s dependency stack (including fixed filelock 3.20.3+) requires Python 3.10+. To keep 3.9 support without fragile transitive pins:
+CI was failing on pip-audit because of a vulnerable transitive filelock (3.19.1). pip-audit is separated into the **audit** extra and runs only on Python 3.10+ in CI: the toolchain and transitive dependencies (including a fixed filelock 3.20.3+) require Python 3.10+; on 3.9 we do not install or run pip-audit, so 3.9 dependency resolution cannot fail on audit stack. Runtime dependencies are unaffected.
 
-- **dev**: Tools that support 3.9 (pytest, bandit). `pip install -e ".[dev]"` succeeds on 3.9–3.12.
-- **audit**: pip-audit and filelock pin only for 3.10+, so audit runs only on Python 3.10+ in CI. No reference to a filelock version for 3.9. Runtime dependencies are unchanged.
+- **dev**: pytest and bandit only; `pip install -e ".[dev]"` succeeds on 3.9–3.12.
+- **audit**: pip-audit (and optional filelock pin) with `python_version>="3.10"`; installed and run only on 3.10+ in CI. No filelock or pip-audit requirement exists for python<3.10.
