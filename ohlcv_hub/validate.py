@@ -4,7 +4,7 @@ from datetime import date
 from typing import Any
 
 import pandas as pd
-import pandas_market_calendars as mcal
+import exchange_calendars as xcals
 from zoneinfo import ZoneInfo
 
 # NY timezone for trading calendar
@@ -154,9 +154,9 @@ def validate_daily_bars(
         return True, report
 
     try:
-        nyse = mcal.get_calendar("NYSE")
-        expected_days = nyse.valid_days(start_date=start, end_date=end)
-        expected_dates = set(expected_days.date)
+        cal = xcals.get_calendar("XNYS")
+        sessions = cal.sessions_in_range(start, end)
+        expected_dates = set(s.date() for s in sessions)
         missing_days_per_symbol: dict[str, list[str]] = {}
         for symbol in df["symbol"].unique():
             symbol_df = df[df["symbol"] == symbol]
