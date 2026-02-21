@@ -37,7 +37,8 @@ dev = [
     "pytest>=8.0.0",
     "bandit>=1.7.0",
     "pip-audit>=2.7.0",
-    "filelock>=3.20.3",
+    "filelock>=3.20.3; python_version>=\"3.10\"",
+    "filelock>=3.19.2; python_version<\"3.10\"",
 ]
 
 [project.scripts]

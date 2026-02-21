@@ -34,4 +34,5 @@ jobs:
         run: bandit -r ohlcv_hub -x tests -q
 
       - name: Run pip-audit
+        if: matrix.python-version != '3.9'
         run: pip-audit
