@@ -5,7 +5,7 @@ import logging
 import time
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Union
 
 import httpx
 
@@ -89,7 +89,7 @@ class AlpacaClient:
             "APCA-API-SECRET-KEY": self.api_secret,
         }
 
-    def _serialize_date(self, dt: date | datetime | str) -> str:
+    def _serialize_date(self, dt: Union[date, datetime, str]) -> str:
         """
         Serialize date/datetime to ISO format string.
 
@@ -180,8 +180,8 @@ class AlpacaClient:
         self,
         symbols: list[str],
         timeframe: str,
-        start: date | datetime | str,
-        end: date | datetime | str,
+        start: Union[date, datetime, str],
+        end: Union[date, datetime, str],
         limit: int = 10000,
         adjustment: str = "raw",
         feed: Optional[str] = None,
