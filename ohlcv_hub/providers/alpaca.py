@@ -32,7 +32,7 @@ class BarsResponse:
     """Response from Alpaca bars endpoint."""
 
     bars: dict[str, list[dict[str, Any]]]
-    currency: str | None = None
+    currency: Optional[str] = None
 
 
 class AlpacaClient:
@@ -184,8 +184,8 @@ class AlpacaClient:
         end: date | datetime | str,
         limit: int = 10000,
         adjustment: str = "raw",
-        feed: str | None = None,
-        asof: str | None = None,
+        feed: Optional[str] = None,
+        asof: Optional[str] = None,
         sort: str = "asc",
     ) -> BarsResponse:
         """
@@ -240,8 +240,8 @@ class AlpacaClient:
 
         # Initialize merged results
         merged_bars: dict[str, list[dict[str, Any]]] = {}
-        currency: str | None = None
-        page_token: str | None = None
+        currency: Optional[str] = None
+        page_token: Optional[str] = None
 
         # Build URL
         url = f"{self.base_url}/v2/stocks/bars"

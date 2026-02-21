@@ -1,5 +1,7 @@
 """Custom exception classes for ohlcv-hub."""
 
+from typing import Optional
+
 
 class OhlcvHubError(Exception):
     """Base exception for all ohlcv-hub errors."""
@@ -22,7 +24,7 @@ class CliUsageError(OhlcvHubError):
 class ProviderError(OhlcvHubError):
     """Raised when a data provider API call fails."""
 
-    def __init__(self, message: str, status_code: int | None = None):
+    def __init__(self, message: str, status_code: Optional[int] = None):
         """
         Initialize ProviderError.
 

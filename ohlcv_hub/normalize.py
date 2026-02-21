@@ -1,6 +1,6 @@
 """Normalize raw bar data to stable schema."""
 
-from typing import Any
+from typing import Any, Optional
 
 import pandas as pd
 
@@ -10,7 +10,7 @@ def bars_dict_to_dataframe(
     *,
     timeframe: str,
     source: str,
-    currency: str | None,
+    currency: Optional[str],
     adjustment: str,
 ) -> pd.DataFrame:
     """

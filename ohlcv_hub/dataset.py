@@ -1,6 +1,7 @@
 """Dataset building orchestration."""
 
 from datetime import date
+from typing import Optional
 
 import pandas as pd
 
@@ -17,7 +18,7 @@ def build_daily_dataset(
     start: date,
     end: date,
     adjustment: str,
-    feed: str | None = "iex",
+    feed: Optional[str] = "iex",
 ) -> tuple[pd.DataFrame, dict]:
     """
     Build daily dataset: fetch, normalize, and validate.
@@ -67,7 +68,7 @@ def build_weekly_dataset(
     start: date,
     end: date,
     adjustment: str,
-    feed: str | None = "iex",
+    feed: Optional[str] = "iex",
 ) -> tuple[pd.DataFrame, dict]:
     """
     Build weekly dataset: fetch daily bars, normalize, resample to weekly, validate.
