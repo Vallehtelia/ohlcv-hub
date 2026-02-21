@@ -1,6 +1,7 @@
 """Integration tests for fetch 1d command with mocked API."""
 
 import json
+import logging
 import os
 from pathlib import Path
 
@@ -280,6 +281,7 @@ def test_fetch_1d_handles_provider_error(tmp_path, monkeypatch):
 
 def test_fetch_verbose_logs_rate_limit_line_when_proactive_throttle(tmp_path, monkeypatch, caplog):
     """With --verbose, a proactive throttle (remaining=0, reset) produces a log line; no real sleep."""
+    caplog.set_level(logging.INFO, logger="ohlcv_hub.providers.alpaca")
     request_count = 0
     fixed_now = 1000.0
     reset_ts = 1001  # now+1 -> proactive sleep ~1.25s (capped)
@@ -348,16 +350,20 @@ def test_fetch_verbose_logs_rate_limit_line_when_proactive_throttle(tmp_path, mo
                 "--verbose",
             ],
         )
-        assert result.exit_code == 0, f"Exit code was {result.exit_code}, stderr: {result.stderr}"
-        # Verbose log is emitted (may appear in stderr or in pytest's caplog)
-        assert "remaining=0" in result.stderr or "Proactive throttle" in result.stderr or "remaining=0" in caplog.text or "Proactive throttle" in caplog.text
+        assert result.exit_code == 0
+        assert "Proactive throttle" in caplog.text
+        assert "remaining=0" in caplog.text
     finally:
         os.environ.pop("ALPACA_API_KEY", None)
         os.environ.pop("ALPACA_API_SECRET", None)
 
 
-def test_fetch_no_verbose_omits_rate_limit_log(tmp_path, monkeypatch):
+def test_fetch_no_verbose_omits_rate_limit_log(tmp_path, monkeypatch, caplog):
     """Without --verbose, no rate-limit debug line in output."""
+    caplog.set_level(logging.INFO, logger="ohlcv_hub.providers.alpaca")
+    # Reset logger level so client (which uses module logger when logger=None) does not emit INFO
+    alpaca_log = logging.getLogger("ohlcv_hub.providers.alpaca")
+    alpaca_log.setLevel(logging.WARNING)
     request_count = 0
     fixed_now = 1000.0
     reset_ts = 1001
@@ -426,8 +432,8 @@ def test_fetch_no_verbose_omits_rate_limit_log(tmp_path, monkeypatch):
             ],
         )
         assert result.exit_code == 0
-        assert "remaining=0" not in result.stderr
-        assert "Proactive throttle" not in result.stderr
+        assert "Proactive throttle" not in caplog.text
+        assert "remaining=0" not in caplog.text
     finally:
         os.environ.pop("ALPACA_API_KEY", None)
         os.environ.pop("ALPACA_API_SECRET", None)
